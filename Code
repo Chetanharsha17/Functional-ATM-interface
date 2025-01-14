@@ -1,0 +1,96 @@
+class ATM:
+    def __init__(self):
+        self.accounts = {}
+
+    def create_account(self, account_number, pin, balance):
+        if account_number in self.accounts:
+            print("Account already exists.")
+            return False
+        self.accounts[account_number] = {
+            "pin": pin,
+            "balance": balance
+        }
+        print("Account created successfully.")
+        return True
+
+    def authenticate(self, account_number, pin):
+        account = self.accounts.get(account_number)
+        if account and account["pin"] == pin:
+            print("Authentication successful.")
+            return True
+        print("Authentication failed.")
+        return False
+
+    def check_balance(self, account_number):
+        print(f"Available balance: {self.accounts[account_number]['balance']}")
+
+    def deposit(self, account_number, amount):
+        if amount > 0:
+            self.accounts[account_number]["balance"] += amount
+            print(f"Deposited {amount}. New balance: {self.accounts[account_number]['balance']}")
+        else:
+            print("Invalid deposit amount.")
+
+    def withdraw(self, account_number, amount):
+        if amount > 0 and self.accounts[account_number]["balance"] >= amount:
+            self.accounts[account_number]["balance"] -= amount
+            print(f"Withdrew {amount}. New balance: {self.accounts[account_number]['balance']}")
+        else:
+            print("Insufficient balance or invalid amount.")
+
+
+def main():
+    atm = ATM()
+
+    while True:
+        print("\n--- ATM Menu ---")
+        print("1. Create Account")
+        print("2. Authenticate")
+        print("3. Check Balance")
+        print("4. Deposit")
+        print("5. Withdraw")
+        print("6. Exit")
+
+        choice = input("Enter your choice: ")
+
+        if choice == "1":
+            acc_num = input("Enter account number: ")
+            pin = input("Set a 4-digit PIN: ")
+            initial_balance = float(input("Enter initial deposit amount: "))
+            atm.create_account(acc_num, pin, initial_balance)
+
+        elif choice == "2":
+            acc_num = input("Enter account number: ")
+            pin = input("Enter PIN: ")
+            if atm.authenticate(acc_num, pin):
+                print("You are now logged in.")
+
+        elif choice == "3":
+            acc_num = input("Enter account number: ")
+            pin = input("Enter PIN: ")
+            if atm.authenticate(acc_num, pin):
+                atm.check_balance(acc_num)
+
+        elif choice == "4":
+            acc_num = input("Enter account number: ")
+            pin = input("Enter PIN: ")
+            if atm.authenticate(acc_num, pin):
+                amount = float(input("Enter amount to deposit: "))
+                atm.deposit(acc_num, amount)
+
+        elif choice == "5":
+            acc_num = input("Enter account number: ")
+            pin = input("Enter PIN: ")
+            if atm.authenticate(acc_num, pin):
+                amount = float(input("Enter amount to withdraw: "))
+                atm.withdraw(acc_num, amount)
+
+        elif choice == "6":
+            print("Exiting ATM. Have a great day!")
+            break
+
+        else:
+            print("Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+    main()
